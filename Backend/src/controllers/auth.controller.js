@@ -40,8 +40,8 @@ export const getSignUp = async (req, res, next) => {
       password: hashedPass,
     });
     if (newUser) {
-      const token = generateToken(newUser._id, res);
       await newUser.save();
+      const token = generateToken(newUser._id, res);
 
       res.status(201).json({
         _id: newUser._id,
@@ -64,5 +64,5 @@ export const getSignUp = async (req, res, next) => {
 };
 
 export const getLogIn = async (req, res, next) => {
-  
+
 };
