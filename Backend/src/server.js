@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.route.js";
 import msgRouter from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/message", msgRouter);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () =>
-  console.log(`The Server is running on http://localhost:${PORT}`),
-);
+app.listen(PORT, () => {
+  console.log(`The Server is running on http://localhost:${PORT}`);
+  connectDB();
+});
