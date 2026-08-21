@@ -1,5 +1,6 @@
 import userModel from "../models/User.js";
 import { generateToken } from "../lib/utils.js";
+import cloudinary from "../lib/cloudinary.js";
 import bcrypt from "bcryptjs";
 
 export const getSignUp = async (req, res, next) => {
@@ -63,6 +64,66 @@ export const getSignUp = async (req, res, next) => {
   }
 };
 
-export const getLogIn = async (req, res, next) => {
+export const logIn = async (req, res, next) => {
+  const { email, password } = req.body;
 
+  if (!email | !password) {
+    return res.status(400).json({ message: "email or password required" });
+  }
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid Email or Password",
+      });
+    }
+
+    const isPassCorrect = await bcrypt.compare(password, user.password);
+    if (!isPassCorrect) {
+      return res.satus(400).json({
+        message: "Invalid Email or Password",
+      });
+    }
+
+    generateToken(user._id, res);
+
+    res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.log("Error while logging in..", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const logOut = async (req, res, next) => {
+  res.cookie("jwt", "", { maxAge: 0 });
+  res.status(200).json({ message: "Logged Out Successfully" });
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { profilePic } = req.body;
+
+    if (!profilePic) {
+      return res.staus(400).json({ message: "Profile pic is required" });
+    }
+    const userId = req.user._id;
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      { userId },
+      { profilePic: uploadResponse.secure_url },
+      { new: true },
+    );
+
+    res.status(200).json({ updatedUser });
+  } catch (error) {
+    console.log("Error while updating data");
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
 };
