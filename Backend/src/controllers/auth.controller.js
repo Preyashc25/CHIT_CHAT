@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 
 export const getSignUp = async (req, res, next) => {
   const { fullName, email, password } = req.body;
+  // console.log(fullName,email,password)
 
   try {
     if (!fullName | !email | !password) {
@@ -40,6 +41,7 @@ export const getSignUp = async (req, res, next) => {
       email,
       password: hashedPass,
     });
+  //  console.log(newUser)
     if (newUser) {
       await newUser.save();
       const token = generateToken(newUser._id, res);
