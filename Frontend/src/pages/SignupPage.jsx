@@ -9,6 +9,8 @@ import {
   UserIcon,
   LoaderIcon,
 } from "lucide-react";
+
+
 function SignupPage() {
   const [formData, setFormData] = useState({
     fullName: "",
