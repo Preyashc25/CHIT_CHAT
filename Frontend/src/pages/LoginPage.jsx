@@ -9,7 +9,6 @@ import {
   LoaderIcon,
 } from "lucide-react";
 
-
 function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -36,11 +35,12 @@ function LoginPage() {
                   <h2 className="text-2xl font-bold text-slate-200 mb-2">
                     Welcome Back
                   </h2>
-                  <p className="text-slate-400">Login to access to your account</p>
+                  <p className="text-slate-400">
+                    Login to access to your account
+                  </p>
                 </div>
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
-  
                   {/* Email */}
                   <div>
                     <label className="auth-input-label">Email</label>
@@ -119,4 +119,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage
+export default LoginPage;
