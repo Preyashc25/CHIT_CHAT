@@ -2,11 +2,11 @@ import { useRef, useState } from "react";
 import { LogOutIcon, VolumeOffIcon, Volume2Icon } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
-import toast from "react-hot-toast";
+import PageLoader from '../components/PageLoader'
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
 
 function ProfileHeader() {
-  const { logOut, authUser, updateProfile } = useAuthStore();
+  const { logOut, authUser, updateProfile ,isUpdatingProfile} = useAuthStore();
   const { isSoundEnabled, toggleSound } = useChatStore();
   const [selectedImg, setSelectedImg] = useState(null);
   const fileInputRef = useRef(null);
@@ -29,7 +29,7 @@ function ProfileHeader() {
       }
     };
   };
-
+  if(isUpdatingProfile) return <PageLoader/>
   return (
     <div className="p-6 border-b border-slate-700/50">
       <div className="flex items-center justify-between">

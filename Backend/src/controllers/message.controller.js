@@ -41,7 +41,7 @@ export const sendMessage = async (req, res, next) => {
     const { id: receiverId } = req.params;
     const senderId = req.user._id;
 
-    if (!text || !image) {
+    if (!text && !image) {
       return res.status(400).json({ message: "Text or image is required" });
     }
     if (senderId.equals(receiverId)) {
@@ -78,7 +78,6 @@ export const sendMessage = async (req, res, next) => {
 export const getChatPartner = async (req, res, next) => {
   try {
     const loggedInUserId = req.user._id;
-    console.log(loggedInUserId);
 
     //Find all the messages where the loggedIn user is either sender or receiver..
     const messages = await Message.find({
@@ -94,12 +93,10 @@ export const getChatPartner = async (req, res, next) => {
         ),
       ),
     ];
-    console.log(chatPartnerIds);
 
     const chatPartner = await User.find({
       _id: { $in: chatPartnerIds },
     }).select("-password");
-    console.log(chatPartner);
     res.status(200).json(chatPartner);
   } catch (error) {
     console.log("Error in getChatPartner Controller", error.message);
