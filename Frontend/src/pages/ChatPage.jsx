@@ -1,4 +1,4 @@
-import { useAuthStore } from "../store/useAuthStore";
+
 import { useChatStore } from "../store/useChatStore";
 import BorderAnimated from "../components/BorderAnimated";
 import ProfileHeader from "../components/ProfileHeader";
@@ -9,7 +9,7 @@ import ChatContainer from "../components/ChatContainer";
 import NoConversationPlaceholder from "../components/NoConversationPlaceholder";
 
 function ChatPage() {
-  const { logOut } = useAuthStore();
+
   const { activeTab, selectedUser } = useChatStore();
   return (
     <div className="relative w-full max-w-6xl h-[800px]">
