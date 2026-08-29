@@ -83,7 +83,6 @@ export const getChatPartner = async (req, res, next) => {
     const messages = await Message.find({
       $or: [{ senderId: loggedInUserId }, { receiverId: loggedInUserId }],
     });
-    console.log(messages);
     const chatPartnerIds = [
       ...new Set(
         messages.map((msg) =>
