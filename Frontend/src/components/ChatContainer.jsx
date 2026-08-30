@@ -1,30 +1,45 @@
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-import { useEffect,useRef } from "react";
+import { useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import NoChatHistoryPlaceholder from "./NoChatHistoryPlaceholder";
-import MessageLoadingSkeleton from './MessageLoadingSkeleton'
-import MessageInput from './MessageInput'
+import MessageLoadingSkeleton from "./MessageLoadingSkeleton";
+import MessageInput from "./MessageInput";
 function ChatContainer() {
-  const { selectedUser, getMessagesByUserId, messages, isMessageLoading } = useChatStore();
+  const {
+    selectedUser,
+    getMessagesByUserId,
+    messages,
+    isMessageLoading,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  } = useChatStore();
   const { authUser } = useAuthStore();
-  const messageEndRef = useRef(null)
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessagesByUserId(selectedUser._id);
-  }, [selectedUser, getMessagesByUserId]);
+    subscribeToMessages();
 
-  useEffect(()=>{
-    if(messageEndRef.current){
-      messageEndRef.current.scrollIntoView({behavior:'smooth'})
+    return () => unsubscribeFromMessages;
+  }, [
+    selectedUser,
+    getMessagesByUserId,
+    unsubscribeFromMessages,
+    subscribeToMessages,
+  ]);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  },[messages])
+  }, [messages]);
+
   return (
     <>
       <ChatHeader />
       <div className="flex-1 px-6 overflow-y-auto py-8">
-        {messages.length > 0 && !isMessageLoading ? 
-        (
+        {messages.length > 0 && !isMessageLoading ? (
           <div className="max-w-3xl mx-auto space-y-6">
             {messages.map((msg) => (
               <div
@@ -51,9 +66,11 @@ function ChatContainer() {
                 </div>
               </div>
             ))}
-            <div ref={messageEndRef}/>
+            <div ref={messageEndRef} />
           </div>
-        ) : isMessageLoading ? <MessageLoadingSkeleton/>:(
+        ) : isMessageLoading ? (
+          <MessageLoadingSkeleton />
+        ) : (
           <NoChatHistoryPlaceholder name={selectedUser.fullName} />
         )}
       </div>
